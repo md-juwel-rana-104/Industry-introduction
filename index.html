@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Earning Opportunity - Final Assessment</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap');
+
+        :root {
+            --primary-color: #8e44ad; /* Amethyst */
+            --primary-dark: #732d91;
+            --secondary-color: #2c3e50; /* Midnight Blue */
+            --correct-color: #27ae60;
+            --incorrect-color: #c0392b;
+            --bg-gradient: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            --container-bg: #ffffff;
+            --font-en: 'Montserrat', sans-serif;
+            --font-bn: 'Hind Siliguri', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font-en);
+            background: var(--bg-gradient);
+            color: var(--secondary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px;
+            overflow: hidden;
+        }
+
+        body.lang-bn { font-family: var(--font-bn); }
+
+        .notification-bar {
+            position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background-color: var(--incorrect-color); color: white;
+            padding: 12px 25px; border-radius: 0 0 10px 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); font-size: 1rem;
+            font-weight: 600; z-index: 1000; transition: top 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            max-width: 90%;
+        }
+        .notification-bar.show { top: 0; }
+
+        .quiz-container {
+            background-color: var(--container-bg); width: 100%; max-width: 750px; border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3); overflow: hidden; text-align: center;
+        }
+
+        .quiz-header { padding: 15px 20px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: flex-end; }
+        .lang-switcher button {
+            background: #f4f4f4; border: 1px solid #ccc; padding: 8px 15px; cursor: pointer; border-radius: 20px;
+            font-weight: 600; transition: all 0.3s;
+        }
+        #lang-en { font-family: var(--font-en); }
+        #lang-bn { font-family: var(--font-bn); }
+
+        .lang-switcher button.active { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
+        .lang-switcher button:first-child { margin-right: 8px; }
+
+        .screen { padding: 25px; animation: fadeIn 0.7s cubic-bezier(0.25, 1, 0.5, 1); }
+        .screen.hidden { display: none; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 10%, 50%, 90% { transform: translateX(-6px); } 30%, 70% { transform: translateX(6px); } }
+        .shake { animation: shake 0.4s ease-in-out; }
+        .invalid-field { border-color: var(--incorrect-color) !important; }
+
+        h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 15px; color: var(--primary-color); }
+        h2 { font-size: 1.25rem; margin-bottom: 20px; line-height: 1.5; }
+        p { font-size: 1rem; margin-bottom: 20px; line-height: 1.7; color: #555; }
+
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group label { font-weight: 600; display: block; margin-bottom: 8px; font-size: 0.9rem; }
+        .input-group input[type="text"] { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem; font-family: inherit; transition: all 0.3s; }
+        .input-group input[type="text"]:focus { border-color: var(--primary-color); box-shadow: 0 0 8px rgba(142, 68, 173, 0.2); outline: none; }
+
+        .screenshot-container { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+        .screenshot-upload { flex: 1; }
+        .screenshot-upload .upload-label { display: block; padding: 12px; background-color: #f8f9fa; border: 2px dashed #ccc; border-radius: 12px; cursor: pointer; font-weight: 500; transition: all 0.3s; }
+        .screenshot-upload .upload-label:hover { border-color: var(--primary-color); background-color: #f3e5f7; }
+        .screenshot-upload input[type="file"] { display: none; }
+        .screenshot-preview { width: 100%; height: 120px; object-fit: cover; margin-top: 15px; border-radius: 12px; border: 2px solid #ddd; }
+
+        .btn { display: inline-block; padding: 12px 28px; font-size: 1rem; font-weight: 600; color: #fff; background: var(--primary-color); border: none; border-radius: 30px; cursor: pointer; transition: all 0.3s; margin: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .btn:hover { background: var(--primary-dark); transform: translateY(-3px) scale(1.05); box-shadow: 0 8px 20px rgba(142, 68, 173, 0.3); }
+        .btn:disabled { background: #bdc3c7; cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn-secondary { background: #95a5a6; }
+        .btn-secondary:hover { background: #7f8c8d; }
+        .btn-full { width: 100%; margin-top: 20px; }
+
+        #navigation-btns { margin-top: 25px; }
+
+        .progress-bar { width: 100%; height: 8px; background-color: #e0e0e0; border-radius: 4px; margin-bottom: 15px; overflow: hidden; }
+        #progress-indicator { height: 100%; width: 0%; background: linear-gradient(90deg, #8e44ad, #9b59b6); transition: width 0.5s ease; }
+        #progress-text { font-weight: 600; color: var(--primary-dark); margin-bottom: 20px; font-size: 0.9rem; }
+
+        .options-list { list-style: none; text-align: left; }
+        .options-list li {
+            padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s;
+            position: relative; display: flex; align-items: center; justify-content: space-between; font-size: 0.9rem;
+        }
+        .options-list li:hover { background-color: #f3e5f7; }
+        .options-list li.correct { background-color: #d5f5e3; border-color: var(--correct-color); color: #218838; font-weight: 600; }
+        .options-list li.incorrect { background-color: #fadbd8; border-color: var(--incorrect-color); color: #a94442; font-weight: 600; }
+        .options-list.disabled li { pointer-events: none; }
+        .feedback-icon { font-size: 1.2rem; font-weight: bold; }
+
+        #review-list { max-height: 350px; overflow-y: auto; text-align: left; padding-right: 10px; }
+        .review-item { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
+        .review-item .options-list li { cursor: default; }
+        .review-item .options-list li.user-answer.incorrect { background-color: #fadbd8; border-color: var(--incorrect-color); }
+        .review-item .options-list li.correct-answer { background-color: #d5f5e3; border-color: var(--correct-color); }
+
+        .score-circle { position: relative; width: 180px; height: 180px; margin: 20px auto; }
+        .score-circle svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+        .score-circle circle { fill: none; stroke-width: 15; }
+        .score-bg { stroke: #ecf0f1; }
+        .score-progress { stroke: var(--primary-color); stroke-linecap: round; stroke-dasharray: 502; stroke-dashoffset: 502; transition: stroke-dashoffset 1.8s cubic-bezier(0.25, 1, 0.5, 1); }
+        .score-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 2.5rem; font-weight: 700; color: var(--primary-dark); }
+
+        /* Responsive Design for PC */
+        @media (min-width: 768px) {
+            body { padding: 20px; }
+            .screen { padding: 40px; }
+            h1 { font-size: 2.4rem; } h2 { font-size: 1.6rem; } p { font-size: 1.1rem; }
+            .input-group label { font-size: 1rem; }
+            .screenshot-container { flex-direction: row; }
+            #navigation-btns { display: flex; justify-content: space-between; align-items: center; }
+            #navigation-btns .btn { width: auto; }
+            .score-circle { width: 200px; height: 200px; }
+            .score-circle circle { stroke-width: 18; }
+            .score-circle .score-progress { stroke-dasharray: 565; stroke-dashoffset: 565; }
+            .score-text { font-size: 3rem; }
+            .options-list li { font-size: 1rem; padding: 15px; }
+            .feedback-icon { font-size: 1.5rem; }
+            .notification-bar { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="notification-bar" id="notification-bar"></div>
+
+<div class="quiz-container">
+    <div class="quiz-header">
+        <div class="lang-switcher">
+            <button id="lang-en" class="active">English</button>
+            <button id="lang-bn">বাংলা</button>
+        </div>
+    </div>
+
+    <div class="screen" id="welcome-screen">
+        <h1 id="welcome-title"></h1>
+        <div class="input-group">
+            <label for="userName" id="name-label"></label>
+            <input type="text" id="userName" required>
+        </div>
+        <div class="input-group">
+            <label for="mentorName" id="mentor-label"></label>
+            <input type="text" id="mentorName" required>
+        </div>
+        <div class="screenshot-container">
+            <div class="screenshot-upload">
+                <p class="upload-title" id="upload-title-1"></p>
+                <label class="upload-label" for="ss-upload-1" id="upload-label-1"></label>
+                <input type="file" id="ss-upload-1" accept="image/*">
+                <img id="ss-preview-1" class="screenshot-preview hidden">
+            </div>
+            <div class="screenshot-upload">
+                <p class="upload-title" id="upload-title-2"></p>
+                <label class="upload-label" for="ss-upload-2" id="upload-label-2"></label>
+                <input type="file" id="ss-upload-2" accept="image/*">
+                <img id="ss-preview-2" class="screenshot-preview hidden">
+            </div>
+        </div>
+        <button class="btn btn-full" id="start-btn"></button>
+    </div>
+
+    <div class="screen hidden" id="quiz-screen">
+        <div id="progress-text"></div>
+        <div class="progress-bar"><div id="progress-indicator"></div></div>
+        <div id="q-animation-wrapper">
+            <h2 id="question-text"></h2>
+            <ul class="options-list" id="options-list"></ul>
+        </div>
+        <div id="navigation-btns">
+            <button class="btn btn-secondary" id="prev-btn"></button>
+            <button class="btn" id="next-btn"></button>
+        </div>
+    </div>
+
+    <div class="screen hidden" id="results-screen">
+        <h1 id="result-heading"></h1>
+        <div class="score-circle">
+            <svg><circle class="score-bg" cx="100" cy="100" r="90"></circle><circle class="score-progress" id="score-progress" cx="100" cy="100" r="90"></circle></svg>
+            <div class="score-text" id="score-percentage">0%</div>
+        </div>
+        <p id="score-details"></p>
+        <button class="btn" id="review-btn"></button>
+        <button class="btn btn-secondary" id="restart-btn"></button>
+    </div>
+
+    <div class="screen hidden" id="review-screen">
+        <h1 id="review-title"></h1>
+        <div id="review-list"></div>
+        <button class="btn" id="back-to-results-btn"></button>
+    </div>
+</div>
+
+<script>
+    // নিচের URL টি আপনার নতুন Deploy করা URL দিয়ে পরিবর্তন করুন
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyheqwrmWYhb6VgJnG0hvn7K6FDoND-SJDyhTmnq2TXn2wXhH44gb943iLfjXCjchG90Q/exec";
+
+    const uiStrings = {
+        en: { welcomeTitle: "Digital Earning Opportunity", nameLabel: "Your Name", mentorLabel: "Mentor's Name", namePlaceholder: "Enter your full name...", mentorPlaceholder: "Enter mentor's name (e.g., John Doe Sir)", uploadTitle1: "Start of Class", uploadTitle2: "End of Class", uploadLabel: "Click to Upload Screenshot", uploadSuccess: "Uploaded!", startBtn: "Start Quiz", progressText: (c, t) => `Question ${c} of ${t}`, prevBtn: "Previous", nextBtn: "Next", resultsBtn: "Finish & See Results", resultHeading: (name) => `Well done, ${name}!`, scoreDetails: (s, t) => `You scored ${s} out of ${t}.`, restartBtn: "Take Quiz Again", reviewBtn: "Review Answers", reviewTitle: "Answer Review", backToResultsBtn: "Back to Results", notifyName: "Please enter your name.", notifyMentor: "Please enter mentor's name correctly (with Sir/Mam).", notifySS1: "Please upload the start of class screenshot.", notifySS2: "Please upload the end of class screenshot.", notifyDuplicateSS: "Please upload two different screenshots.", submissionInProgress: "Submitting...", submissionSuccess: "Submission Successful!", submissionError: "Submission Failed! Please try again." },
+        bn: { welcomeTitle: "ডিজিটাল আর্নিং অপরচুনিটি", nameLabel: "আপনার নাম", mentorLabel: "মেন্টরের নাম", namePlaceholder: "আপনার সম্পূর্ণ নাম লিখুন...", mentorPlaceholder: "মেন্টরের নাম লিখুন (যেমন, জন ডো স্যার)", uploadTitle1: "ক্লাসের শুরু", uploadTitle2: "ক্লাসের শেষ", uploadLabel: "স্ক্রিনশট আপলোড করুন", uploadSuccess: "আপলোড হয়েছে!", startBtn: "কুইজ শুরু করুন", progressText: (c, t) => `প্রশ্ন ${t}-এর মধ্যে ${c}`, prevBtn: "পূর্ববর্তী", nextBtn: "পরবর্তী", resultsBtn: "শেষ করুন ও ফলাফল দেখুন", resultHeading: (name) => `খুব ভালো, ${name}!`, scoreDetails: (s, t) => `আপনি ${t}টির মধ্যে ${s}টি সঠিক করেছেন।`, restartBtn: "আবার কুইজ দিন", reviewBtn: "উত্তর পর্যালোচনা করুন", reviewTitle: "উত্তর পর্যালোচনা", backToResultsBtn: "ফলাফলে ফিরে যান", notifyName: "অনুগ্রহ করে আপনার নাম লিখুন।", notifyMentor: "মেন্টরের নাম সঠিকভাবে লিখুন (স্যার/ম্যাম সহ)।", notifySS1: "ক্লাসের শুরুর স্ক্রিনশট আপলোড করুন।", notifySS2: "ক্লাসের শেষের স্ক্রিনশট আপলোড করুন।", notifyDuplicateSS: "অনুগ্রহ করে দুটি ভিন্ন স্ক্রিনশট আপলোড করুন।", submissionInProgress: "জমা দেওয়া হচ্ছে...", submissionSuccess: "সফলভাবে জমা দেওয়া হয়েছে!", submissionError: "জমা দিতে ব্যর্থ! আবার চেষ্টা করুন।" }
+    };
+    const quizData = [
+        { question: { en: 'Which stage is called "The Golden Period of Life?"', bn: 'জীবনের কোন পর্যায়কে "সোনালী সময়" বলা হয়?' }, options: { en: ['Childhood (0-12 age)', 'Teenage (13-20 age)', 'Youth (21-40 age)', 'Old Age (41+ age)'], bn: ['শৈশব (০-১২ বছর)', 'কৈশোর (১৩-২০ বছর)', 'যৌবন (২১-৪০ বছর)', 'বার্ধক্য (৪১+ বছর)'] }, answerKey: 'Youth (21-40 age)' },
+        { question: { en: 'Suppose, you want to buy a bike to make your journey more easier, this is your -', bn: 'ধরুন, আপনার যাতায়াত সহজ করার জন্য আপনি একটি বাইক কিনতে চান, এটি আপনার -' }, options: { en: ['Need', 'Want', 'Dream'], bn: ['প্রয়োজন', 'চাহিদা', 'স্বপ্ন'] }, answerKey: 'Want' },
+        { question: { en: 'If you have a group of people who works for you, then you are earning by doing -', bn: 'আপনার জন্য যদি একদল লোক কাজ করে, তাহলে আপনি কীসের মাধ্যমে উপার্জন করছেন?' }, options: { en: ['Time Trades', 'Time Leverage'], bn: ['সময়ের ব্যবসা', 'সময়ের লিভারেজ'] }, answerKey: 'Time Leverage' },
+        { question: { en: 'Time Leverage related with -', bn: 'সময়ের লিভারেজ কিসের সাথে সম্পর্কিত?' }, options: { en: ['Active Income', 'Passive Income'], bn: ['সক্রিয় আয়', 'নিষ্ক্রিয় আয়'] }, answerKey: 'Passive Income' },
+        { question: { en: "What is The 21st Century's Business Model called?", bn: 'একবিংশ শতাব্দীর ব্যবসায়িক মডেলকে কী বলা হয়?' }, options: { en: ['Traditional Business', 'Freelancing', 'Network Marketing', 'Brick and Mortar'], bn: ['প্রচলিত ব্যবসা', 'ফ্রিল্যান্সিং', 'নেটওয়ার্ক মার্কেটিং', 'ব্রিক অ্যান্ড মর্টার'] }, answerKey: 'Network Marketing' },
+        { question: { en: 'Business owners -', bn: 'ব্যবসার মালিকরা -' }, options: { en: ['Run After a Fixed Income', 'Create Network and Own a System'], bn: ['নির্দিষ্ট আয়ের পেছনে ছোটেন', 'নেটওয়ার্ক তৈরি করেন এবং একটি সিস্টেমের মালিক হন'] }, answerKey: 'Create Network and Own a System' },
+        { question: { en: 'What is the main mission of THE DREAMERS ACADEMY?', bn: 'THE DREAMERS ACADEMY-এর প্রধান লক্ষ্য কী?' }, options: { en: ['To sell products', 'To help people get jobs', 'To build entrepreneurs and leaders', 'To offer academic courses'], bn: ['পণ্য বিক্রি করা', 'চাকরি পেতে সাহায্য করা', 'উদ্যোক্তা এবং নেতা তৈরি করা', 'একাডেমিক কোর্স অফার করা'] }, answerKey: 'To build entrepreneurs and leaders' },
+        { question: { en: '"Shutter off, income off" is related to -', bn: '"শাটার বন্ধ, আয় বন্ধ" - এটি কার সাথে সম্পর্কিত?' }, options: { en: ['Employee', 'Business Owner', 'Self-Employed', 'Investor'], bn: ['কর্মচারী', 'ব্যবসায়ী', 'আত্ম-কর্মসংস্থানকারী', 'বিনিয়োগকারী'] }, answerKey: 'Self-Employed' },
+        { question: { en: 'Why is Traditional Business a Complex Business Model?', bn: 'প্রচলিত ব্যবসা কেন একটি জটিল ব্যবসায়িক মডেল?' }, options: { en: ['Requires high capital and management', 'Offers quick passive income', 'No legal involvement', 'Easy to automate'], bn: ['উচ্চ পুঁজি এবং ব্যবস্থাপনার প্রয়োজন', 'দ্রুত প্যাসিভ আয়ের সুযোগ দেয়', 'কোনো আইনি জড়িত নেই', 'সহজে স্বয়ংক্রিয় করা যায়'] }, answerKey: 'Requires high capital and management' },
+        { question: { en: 'Network Marketing offers -', bn: 'নেটওয়ার্ক মার্কেটিং কী অফার করে?' }, options: { en: ['A ready-made business system', 'A complex system', 'Lots of management headache'], bn: ['একটি রেডিমেড ব্যবসায়িক সিস্টেম', 'একটি জটিল সিস্টেম', 'প্রচুর ব্যবস্থাপনার মাথাব্যথা'] }, answerKey: 'A ready-made business system' }];
+
+    let currentLanguage = 'en';
+    let currentQuestionIndex = 0;
+    let userAnswers = new Array(quizData.length).fill(null);
+    let userName = '', mentorName = '';
+    let screenshotFile1 = null, screenshotFile2 = null;
+    let screenshotBase64_1 = null, screenshotBase64_2 = null;
+
+    const body = document.body;
+    const screens = { welcome: document.getElementById('welcome-screen'), quiz: document.getElementById('quiz-screen'), results: document.getElementById('results-screen'), review: document.getElementById('review-screen') };
+    const notificationBar = document.getElementById('notification-bar');
+    const langEnBtn = document.getElementById('lang-en'), langBnBtn = document.getElementById('lang-bn');
+    const startBtn = document.getElementById('start-btn'), prevBtn = document.getElementById('prev-btn'), nextBtn = document.getElementById('next-btn');
+    const restartBtn = document.getElementById('restart-btn'), reviewBtn = document.getElementById('review-btn'), backToResultsBtn = document.getElementById('back-to-results-btn');
+    const userNameInput = document.getElementById('userName'), mentorNameInput = document.getElementById('mentorName');
+
+    setLanguage('en');
+
+    langEnBtn.addEventListener('click', () => setLanguage('en'));
+    langBnBtn.addEventListener('click', () => setLanguage('bn'));
+    startBtn.addEventListener('click', startQuiz);
+    prevBtn.addEventListener('click', handlePrevButton);
+    nextBtn.addEventListener('click', handleNextButton);
+    restartBtn.addEventListener('click', restartQuiz);
+    reviewBtn.addEventListener('click', () => switchScreen('review'));
+    backToResultsBtn.addEventListener('click', () => switchScreen('results'));
+    document.getElementById('ss-upload-1').addEventListener('change', (e) => handleFileUpload(e, 1));
+    document.getElementById('ss-upload-2').addEventListener('change', (e) => handleFileUpload(e, 2));
+
+    function setLanguage(lang) {
+        currentLanguage = lang;
+        body.classList.toggle('lang-bn', lang === 'bn');
+        langEnBtn.classList.toggle('active', lang === 'en');
+        langBnBtn.classList.toggle('active', lang === 'bn');
+        updateAllUIText();
+    }
+
+    function updateAllUIText() {
+        const t = uiStrings[currentLanguage];
+        document.getElementById('welcome-title').innerText = t.welcomeTitle;
+        document.getElementById('name-label').innerText = t.nameLabel;
+        document.getElementById('mentor-label').innerText = t.mentorLabel;
+        userNameInput.placeholder = t.namePlaceholder;
+        mentorNameInput.placeholder = t.mentorPlaceholder;
+        if (!screenshotFile1) document.getElementById('upload-label-1').innerText = t.uploadLabel;
+        if (!screenshotFile2) document.getElementById('upload-label-2').innerText = t.uploadLabel;
+        document.getElementById('upload-title-1').innerText = t.uploadTitle1;
+        document.getElementById('upload-title-2').innerText = t.uploadTitle2;
+        startBtn.innerText = t.startBtn;
+        prevBtn.innerText = t.prevBtn;
+        restartBtn.innerText = t.restartBtn;
+        reviewBtn.innerText = t.reviewBtn;
+        document.getElementById('review-title').innerText = t.reviewTitle;
+        backToResultsBtn.innerText = t.backToResultsBtn;
+
+        if (!screens.quiz.classList.contains('hidden')) {
+            document.getElementById('question-text').innerText = quizData[currentQuestionIndex].question[currentLanguage];
+            document.querySelectorAll('#options-list li').forEach((li, index) => {
+                const span = li.querySelector('span:first-child');
+                if (span) span.innerText = quizData[currentQuestionIndex].options[currentLanguage][index];
+            });
+            updateNavigation();
+        }
+        if (!screens.review.classList.contains('hidden')) buildReviewScreen();
+        if (!screens.results.classList.contains('hidden')) {
+            let score = 0; userAnswers.forEach((ans, i) => { if (ans === quizData[i].answerKey) score++; });
+            document.getElementById('result-heading').innerText = t.resultHeading(userName);
+            document.getElementById('score-details').innerText = t.scoreDetails(score, quizData.length);
+        }
+    }
+
+    function showNotification(message, isSuccess = false) {
+        notificationBar.innerText = message;
+        notificationBar.style.backgroundColor = isSuccess ? 'var(--correct-color)' : 'var(--incorrect-color)';
+        notificationBar.classList.add('show');
+        setTimeout(() => notificationBar.classList.remove('show'), 3000);
+    }
+
+    function triggerShake(element) {
+        element.classList.add('shake', 'invalid-field');
+        setTimeout(() => element.classList.remove('shake', 'invalid-field'), 500);
+    }
+
+    function validateWelcomeScreen() {
+        const t = uiStrings[currentLanguage];
+        if (userNameInput.value.trim() === '') {
+            showNotification(t.notifyName); triggerShake(userNameInput); return false;
+        }
+
+        const mentorNameVal = mentorNameInput.value.trim();
+        const mentorNameLower = mentorNameVal.toLowerCase();
+        const validSuffixes = ['sir', 'mam', 'স্যার', 'ম্যাম'];
+        const hasValidSuffix = validSuffixes.some(suffix => mentorNameLower.endsWith(` ${suffix}`) || mentorNameLower.endsWith(suffix));
+        const namePart = mentorNameVal.replace(/sir|mam|স্যার|ম্যাম/gi, '').trim();
+        if (namePart === '' || !hasValidSuffix) {
+            showNotification(t.notifyMentor); triggerShake(mentorNameInput); return false;
+        }
+
+        if (!screenshotFile1) { showNotification(t.notifySS1); triggerShake(document.getElementById('upload-label-1')); return false; }
+        if (!screenshotFile2) { showNotification(t.notifySS2); triggerShake(document.getElementById('upload-label-2')); return false; }
+
+        if (screenshotFile1 && screenshotFile2 && screenshotFile1.name === screenshotFile2.name && screenshotFile1.size === screenshotFile2.size) {
+            showNotification(t.notifyDuplicateSS);
+            triggerShake(document.getElementById('upload-label-1'));
+            triggerShake(document.getElementById('upload-label-2'));
+            return false;
+        }
+        return true;
+    }
+
+    function handleFileUpload(e, num) {
+        const file = e.target.files[0], previewEl = document.getElementById(`ss-preview-${num}`), labelEl = document.getElementById(`upload-label-${num}`);
+        if (file && file.type.startsWith('image/')) {
+            if(num === 1) screenshotFile1 = file; else screenshotFile2 = file;
+            previewEl.src = URL.createObjectURL(file);
+            previewEl.classList.remove('hidden');
+            labelEl.innerText = uiStrings[currentLanguage].uploadSuccess;
+            labelEl.classList.remove('invalid-field');
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                if (num === 1) screenshotBase64_1 = event.target.result;
+                else screenshotBase64_2 = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function switchScreen(screenToShow) { Object.values(screens).forEach(s => s.classList.add('hidden')); screens[screenToShow].classList.remove('hidden'); }
+    function startQuiz() { if (!validateWelcomeScreen()) return; userName = userNameInput.value.trim(); mentorName = mentorNameInput.value.trim(); switchScreen('quiz'); showQuestion(); }
+
+    function showQuestion() {
+        const qWrapper = document.getElementById('q-animation-wrapper');
+        qWrapper.style.animation = 'none'; void qWrapper.offsetWidth;
+        qWrapper.style.animation = 'fadeIn 0.5s ease-in-out';
+        document.getElementById('options-list').innerHTML = '';
+        const currentQuestion = quizData[currentQuestionIndex], t = uiStrings[currentLanguage];
+        document.getElementById('progress-indicator').style.width = `${((currentQuestionIndex + 1) / quizData.length) * 100}%`;
+        document.getElementById('progress-text').innerText = t.progressText(currentQuestionIndex + 1, quizData.length);
+        document.getElementById('question-text').innerText = currentQuestion.question[currentLanguage];
+        const optionsList = document.getElementById('options-list');
+        currentQuestion.options[currentLanguage].forEach((option, index) => {
+            const li = document.createElement('li'), textSpan = document.createElement('span');
+            textSpan.innerText = option; li.appendChild(textSpan);
+            li.dataset.answerKey = currentQuestion.options.en[index]; li.addEventListener('click', selectOption); optionsList.appendChild(li);
+        });
+        if(userAnswers[currentQuestionIndex]) { showInstantFeedback(); } else { optionsList.classList.remove('disabled'); }
+        updateNavigation();
+    }
+
+    function selectOption(e) {
+        if(document.getElementById('options-list').classList.contains('disabled')) return;
+        userAnswers[currentQuestionIndex] = e.target.closest('li').dataset.answerKey;
+        showInstantFeedback();
+        updateNavigation();
+    }
+
+    function showInstantFeedback() {
+        const optionsList = document.getElementById('options-list');
+        optionsList.classList.add('disabled');
+        const correctAnswerKey = quizData[currentQuestionIndex].answerKey;
+        Array.from(optionsList.children).forEach(li => {
+            if(li.querySelector('.feedback-icon')) li.querySelector('.feedback-icon').remove();
+            const icon = document.createElement('span'); icon.className = 'feedback-icon';
+            if (li.dataset.answerKey === correctAnswerKey) {
+                li.classList.add('correct'); icon.innerHTML = '✔'; li.appendChild(icon);
+            } else if (li.dataset.answerKey === userAnswers[currentQuestionIndex]) {
+                li.classList.add('incorrect'); icon.innerHTML = '✖'; li.appendChild(icon);
+            }
+        });
+    }
+
+    function handlePrevButton() { if(currentQuestionIndex > 0) { currentQuestionIndex--; showQuestion(); } }
+    function handleNextButton() { if (currentQuestionIndex < quizData.length - 1) { currentQuestionIndex++; showQuestion(); } else { showResults(); } }
+    function updateNavigation() {
+        prevBtn.disabled = currentQuestionIndex === 0;
+        nextBtn.disabled = userAnswers[currentQuestionIndex] === null;
+        nextBtn.innerText = uiStrings[currentLanguage][currentQuestionIndex === quizData.length - 1 ? 'resultsBtn' : 'nextBtn'];
+    }
+
+    function showResults() {
+        let score = 0;
+        userAnswers.forEach((answer, index) => { if (answer === quizData[index].answerKey) score++; });
+        const percentage = Math.round((score / quizData.length) * 100);
+
+        submitDataToSheet(score, percentage);
+
+        switchScreen('results');
+        const t = uiStrings[currentLanguage];
+        document.getElementById('result-heading').innerText = t.resultHeading(userName);
+        document.getElementById('score-percentage').innerText = `${percentage}%`;
+        document.getElementById('score-details').innerText = t.scoreDetails(score, quizData.length);
+        const circle = document.getElementById('score-progress'), radius = circle.r.baseVal.value, circumference = 2 * Math.PI * radius;
+        const offset = circumference - (percentage / 100) * circumference;
+        setTimeout(() => circle.style.strokeDashoffset = offset, 100);
+        buildReviewScreen();
+    }
+
+    function submitDataToSheet(score, percentage) {
+    const formData = new FormData();
+    formData.append('UserName', userName);
+    formData.append('MentorName', mentorName);
+    formData.append('Score', score);
+    formData.append('Percentage', percentage);
+
+    // প্রতিটি প্রশ্নের উত্তর আলাদাভাবে যোগ করা হচ্ছে
+    userAnswers.forEach((answer, index) => {
+        formData.append(`Q${index + 1}_Answer`, answer || 'Not Answered');
+    });
+
+    formData.append('screenshot1', screenshotBase64_1);
+    formData.append('screenshot2', screenshotBase64_2);
+
+    const submissionBtn = document.getElementById('review-btn');
+    const originalText = submissionBtn.innerText;
+    submissionBtn.disabled = true;
+    reviewBtn.style.backgroundColor = '#bdc3c7'; // Grey out the button
+    submissionBtn.innerText = uiStrings[currentLanguage].submissionInProgress;
+
+    fetch(SCRIPT_URL, { method: 'POST', body: formData})
+        .then(response => response.json())
+        .then(data => {
+            if(data.result === 'success'){
+                showNotification(uiStrings[currentLanguage].submissionSuccess, true);
+            } else {
+                throw new Error(data.error || 'Unknown error');
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            showNotification(uiStrings[currentLanguage].submissionError);
+        })
+        .finally(() => {
+            submissionBtn.disabled = false;
+            reviewBtn.style.backgroundColor = 'var(--primary-color)'; // Restore color
+            submissionBtn.innerText = originalText;
+        });
+}
+
+    function buildReviewScreen() {
+        const reviewList = document.getElementById('review-list');
+        reviewList.innerHTML = '';
+        quizData.forEach((q, index) => {
+            const item = document.createElement('div'), questionText = document.createElement('h2'), optionsUl = document.createElement('ul');
+            item.className = 'review-item'; questionText.innerText = (index + 1) + '. ' + q.question[currentLanguage]; optionsUl.className = 'options-list';
+            q.options[currentLanguage].forEach((opt, optIndex) => {
+                const li = document.createElement('li'), englishOptKey = q.options.en[optIndex];
+                li.innerText = opt;
+                if (englishOptKey === q.answerKey) li.classList.add('correct-answer');
+                if (englishOptKey === userAnswers[index]) {
+                    li.classList.add('user-answer');
+                    if (userAnswers[index] !== q.answerKey) li.classList.add('incorrect');
+                }
+                optionsUl.appendChild(li);
+            });
+            item.appendChild(questionText); item.appendChild(optionsUl); reviewList.appendChild(item);
+        });
+    }
+
+    function restartQuiz() { window.location.reload(); }
+</script>
+</body>
+</html>
