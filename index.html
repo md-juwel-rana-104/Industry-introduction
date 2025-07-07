@@ -5,149 +5,260 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Industry Introduction - Final Assessment</title>
     <style>
+        /* --- Fonts --- */
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap');
 
+        /* --- Refined Neumorphic Theme --- */
         :root {
-            --primary-color: #8e44ad; /* Amethyst */
-            --primary-dark: #732d91;
+            --primary-color: #8e44ad; /* Amethyst - Changed Color */
+            --primary-dark: #732d91; /* Changed Color */
             --secondary-color: #2c3e50; /* Midnight Blue */
+
             --correct-color: #27ae60;
             --incorrect-color: #c0392b;
-            --bg-gradient: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
-            --container-bg: #ffffff;
+
+            --bg-color: #eef0f4; /* Neumorphic Base */
+            --light-shadow: rgba(255, 255, 255, 0.9);
+            --dark-shadow: #c8cdd4;
+
             --font-en: 'Montserrat', sans-serif;
             --font-bn: 'Hind Siliguri', sans-serif;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
+        html { scroll-behavior: smooth; }
+
         body {
             font-family: var(--font-en);
-            background: var(--bg-gradient);
+            background: var(--bg-color);
             color: var(--secondary-color);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 10px;
-            overflow: hidden;
+            padding: 15px;
+            overflow-x: hidden;
         }
 
         body.lang-bn { font-family: var(--font-bn); }
 
+        /* --- Notification Bar --- */
         .notification-bar {
-            position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background-color: var(--incorrect-color); color: white;
-            padding: 12px 25px; border-radius: 0 0 10px 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); font-size: 1rem;
-            font-weight: 600; z-index: 1000; transition: top 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            max-width: 90%;
+            position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
+            background: var(--bg-color);
+            padding: 12px 25px; border-radius: 12px;
+            box-shadow: 6px 6px 12px var(--dark-shadow), -6px -6px 12px var(--light-shadow);
+            color: var(--incorrect-color);
+            font-size: 1rem; font-weight: 600; z-index: 1000;
+            transition: top 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            max-width: 90%; text-align: center;
         }
-        .notification-bar.show { top: 0; }
+        .notification-bar.show { top: 20px; }
+        .notification-bar.success { color: var(--correct-color); }
 
+        /* --- Main Container --- */
         .quiz-container {
-            background-color: var(--container-bg); width: 100%; max-width: 750px; border-radius: 20px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3); overflow: hidden; text-align: center;
+            background-color: var(--bg-color);
+            width: 100%; max-width: 800px;
+            border-radius: 30px;
+            box-shadow: 15px 15px 30px var(--dark-shadow), -15px -15px 30px var(--light-shadow);
+            overflow: hidden; text-align: center;
         }
 
-        .quiz-header { padding: 15px 20px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: flex-end; }
+        .quiz-header { padding: 20px 25px; display: flex; justify-content: flex-end; }
+
+        /* --- Core Neumorphic Styles --- */
+        .neumorphic-outset {
+            border-radius: 15px;
+            background: var(--bg-color);
+            box-shadow: 5px 5px 10px var(--dark-shadow), -5px -5px 10px var(--light-shadow);
+            transition: all 0.2s ease-in-out;
+            border: none;
+        }
+        .neumorphic-inset {
+            border-radius: 15px;
+            background: var(--bg-color);
+            box-shadow: inset 5px 5px 10px var(--dark-shadow), inset -5px -5px 10px var(--light-shadow);
+        }
+
         .lang-switcher button {
-            background: #f4f4f4; border: 1px solid #ccc; padding: 8px 15px; cursor: pointer; border-radius: 20px;
-            font-weight: 600; transition: all 0.3s;
+            padding: 10px 18px; cursor: pointer;
+            font-weight: 600; color: var(--secondary-color);
         }
-        #lang-en { font-family: var(--font-en); }
-        #lang-bn { font-family: var(--font-bn); }
+        .lang-switcher button:hover { transform: translateY(-2px); }
+        .lang-switcher button.active {
+            color: var(--primary-color);
+            box-shadow: inset 4px 4px 8px var(--dark-shadow), inset -4px -4px 8px var(--light-shadow);
+        }
+        .lang-switcher button:first-child { margin-right: 10px; }
 
-        .lang-switcher button.active { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
-        .lang-switcher button:first-child { margin-right: 8px; }
-
-        .screen { padding: 25px; animation: fadeIn 0.7s cubic-bezier(0.25, 1, 0.5, 1); }
+        .screen { padding: 25px; animation: fadeIn 0.7s ease; }
         .screen.hidden { display: none; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         @keyframes shake { 0%, 100% { transform: translateX(0); } 10%, 50%, 90% { transform: translateX(-6px); } 30%, 70% { transform: translateX(6px); } }
-        .shake { animation: shake 0.4s ease-in-out; }
-        .invalid-field { border-color: var(--incorrect-color) !important; }
+        .invalid-field {
+            animation: shake 0.4s ease-in-out;
+            box-shadow: inset 3px 3px 6px #b55042, inset -3px -3px 6px #ff7a6c !important; /* Redish shadow for error */
+        }
 
-        h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 15px; color: var(--primary-color); }
-        h2 { font-size: 1.25rem; margin-bottom: 20px; line-height: 1.5; }
-        p { font-size: 1rem; margin-bottom: 20px; line-height: 1.7; color: #555; }
+        /* --- Typography --- */
+        h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 20px; color: var(--primary-color); }
+        h2 { font-size: 1.3rem; margin-bottom: 25px; line-height: 1.6; color: var(--secondary-color); }
+        p { font-size: 1rem; margin-bottom: 20px; line-height: 1.7; color: #6c7a89; }
 
-        .input-group { margin-bottom: 15px; text-align: left; }
-        .input-group label { font-weight: 600; display: block; margin-bottom: 8px; font-size: 0.9rem; }
-        .input-group input[type="text"] { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem; font-family: inherit; transition: all 0.3s; }
-        .input-group input[type="text"]:focus { border-color: var(--primary-color); box-shadow: 0 0 8px rgba(142, 68, 173, 0.2); outline: none; }
+        /* --- Forms & Inputs --- */
+        .input-group { margin-bottom: 25px; text-align: left; }
+        .input-group label { font-weight: 600; display: block; margin-bottom: 10px; font-size: 0.9rem; color: var(--secondary-color); padding-left: 5px; }
+        .input-group input[type="text"] {
+            width: 100%; padding: 15px;
+            border: none; font-size: 1rem; font-family: inherit;
+            color: var(--secondary-color); background-color: transparent;
+        }
+        .input-group input[type="text"]:focus {
+             outline: none;
+        }
 
-        .screenshot-container { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
-        .screenshot-upload { flex: 1; }
-        .screenshot-upload .upload-label { display: block; padding: 12px; background-color: #f8f9fa; border: 2px dashed #ccc; border-radius: 12px; cursor: pointer; font-weight: 500; transition: all 0.3s; }
-        .screenshot-upload .upload-label:hover { border-color: var(--primary-color); background-color: #f3e5f7; }
+        /* --- Screenshot Upload --- */
+        .screenshot-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .screenshot-upload {
+            flex: 1;
+        }
+        .screenshot-upload .upload-label {
+            display: flex; align-items: center; justify-content: center;
+            padding: 15px; cursor: pointer; font-weight: 500; color: var(--secondary-color);
+            text-align: center;
+        }
+        .screenshot-upload .upload-label:hover {
+            color: var(--primary-color); transform: translateY(-2px);
+        }
         .screenshot-upload input[type="file"] { display: none; }
-        .screenshot-preview { width: 100%; height: 120px; object-fit: cover; margin-top: 15px; border-radius: 12px; border: 2px solid #ddd; }
 
-        .btn { display: inline-block; padding: 12px 28px; font-size: 1rem; font-weight: 600; color: #fff; background: var(--primary-color); border: none; border-radius: 30px; cursor: pointer; transition: all 0.3s; margin: 5px; text-transform: uppercase; letter-spacing: 1px; }
-        .btn:hover { background: var(--primary-dark); transform: translateY(-3px) scale(1.05); box-shadow: 0 8px 20px rgba(142, 68, 173, 0.3); }
-        .btn:disabled { background: #bdc3c7; cursor: not-allowed; transform: none; box-shadow: none; }
-        .btn-secondary { background: #95a5a6; }
-        .btn-secondary:hover { background: #7f8c8d; }
+        .screenshot-upload .neumorphic-inset {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 150px;
+            padding: 5px;
+        }
+
+        .screenshot-preview {
+            width: 100%;
+            max-height: 140px;
+            object-fit: contain;
+            display: none;
+            border-radius: 10px;
+        }
+        .screenshot-preview.visible {
+            display: block;
+        }
+
+
+        /* --- Buttons --- */
+        .btn {
+            padding: 15px 30px; font-size: 1rem; font-weight: 700;
+            cursor: pointer; margin: 5px; text-transform: uppercase; letter-spacing: 1px;
+            color: var(--secondary-color);
+        }
+        .btn:hover { transform: translateY(-2px); }
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: inset 5px 5px 10px var(--dark-shadow), inset -5px -5px 10px var(--light-shadow);
+        }
+        .btn.btn-primary {
+            color: #fff; background-color: var(--primary-color);
+            box-shadow: 5px 5px 10px var(--dark-shadow), -5px -5px 10px var(--light-shadow);
+        }
+        .btn.btn-primary:hover { background-color: var(--primary-dark); }
+        .btn.btn-primary:active {
+             box-shadow: inset 5px 5px 10px var(--primary-dark), inset -5px -5px 10px var(--primary-color);
+        }
+        .btn:disabled {
+            box-shadow: none; color: #aaa;
+            background-color: #d1d9e6;
+            cursor: not-allowed; transform: none;
+        }
         .btn-full { width: 100%; margin-top: 20px; }
 
-        #navigation-btns { margin-top: 25px; }
+        /* --- Quiz Screen --- */
+        .progress-bar { width: 100%; height: 10px; border-radius: 5px; margin-bottom: 20px; overflow: hidden; }
+        #progress-indicator { height: 100%; width: 0%; background: var(--primary-color); transition: width 0.5s ease; border-radius: 5px; }
+        #progress-text { font-weight: 600; color: var(--secondary-color); margin-bottom: 20px; font-size: 0.9rem; }
 
-        .progress-bar { width: 100%; height: 8px; background-color: #e0e0e0; border-radius: 4px; margin-bottom: 15px; overflow: hidden; }
-        #progress-indicator { height: 100%; width: 0%; background: linear-gradient(90deg, #8e44ad, #9b59b6); transition: width 0.5s ease; }
-        #progress-text { font-weight: 600; color: var(--primary-dark); margin-bottom: 20px; font-size: 0.9rem; }
+        .navigation-container { display: flex; justify-content: space-between; margin-top: 20px; }
 
         .options-list { list-style: none; text-align: left; }
         .options-list li {
-            padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s;
-            position: relative; display: flex; align-items: center; justify-content: space-between; font-size: 0.9rem;
+            padding: 15px; margin-bottom: 15px; cursor: pointer;
+            position: relative; display: flex; align-items: center; justify-content: space-between;
+            font-size: 1rem; color: var(--secondary-color);
         }
-        .options-list li:hover { background-color: #f3e5f7; }
-        .options-list li.correct { background-color: #d5f5e3; border-color: var(--correct-color); color: #218838; font-weight: 600; }
-        .options-list li.incorrect { background-color: #fadbd8; border-color: var(--incorrect-color); color: #a94442; font-weight: 600; }
+        .options-list li.selected {
+             box-shadow: inset 5px 5px 10px var(--dark-shadow), inset -5px -5px 10px var(--light-shadow);
+        }
+        .options-list li.correct {
+            font-weight: 600; color: var(--correct-color);
+        }
+        .options-list li.incorrect {
+            font-weight: 600; color: var(--incorrect-color);
+        }
         .options-list.disabled li { pointer-events: none; }
         .feedback-icon { font-size: 1.2rem; font-weight: bold; }
 
-        #review-list { max-height: 350px; overflow-y: auto; text-align: left; padding-right: 10px; }
-        .review-item { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
+        /* --- Review Screen --- */
+        .review-item { margin-bottom: 20px; border-bottom: 1px solid #d1d9e6; padding-bottom: 15px;}
+        #review-list { max-height: 400px; overflow-y: auto; text-align: left; padding-right: 10px; }
         .review-item .options-list li { cursor: default; }
-        .review-item .options-list li.user-answer.incorrect { background-color: #fadbd8; border-color: var(--incorrect-color); }
-        .review-item .options-list li.correct-answer { background-color: #d5f5e3; border-color: var(--correct-color); }
+        .review-item .options-list li.user-answer.incorrect {
+             color: var(--incorrect-color);
+             box-shadow: inset 5px 5px 10px var(--dark-shadow), inset -5px -5px 10px var(--light-shadow);
+        }
+        .review-item .options-list li.correct-answer {
+             color: var(--correct-color);
+        }
 
-        .score-circle { position: relative; width: 180px; height: 180px; margin: 20px auto; }
-        .score-circle svg { width: 100%; height: 100%; transform: rotate(-90deg); }
-        .score-circle circle { fill: none; stroke-width: 15; }
-        .score-bg { stroke: #ecf0f1; }
-        .score-progress { stroke: var(--primary-color); stroke-linecap: round; stroke-dasharray: 502; stroke-dashoffset: 502; transition: stroke-dashoffset 1.8s cubic-bezier(0.25, 1, 0.5, 1); }
-        .score-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 2.5rem; font-weight: 700; color: var(--primary-dark); }
+        /* --- Score Circle --- */
+        .score-circle-container {
+            width: 180px; height: 180px;
+            margin: 20px auto;
+            position: relative;
+            border-radius: 50%;
+        }
+        .score-circle { position: relative; width: 100%; height: 100%; }
+        .score-circle svg { width: 100%; height: 100%; transform: rotate(-90deg); position: absolute; top: 0; left: 0; }
+        .score-circle .score-path { fill: none; stroke-width: 18; stroke-linecap: round; }
+        .score-bg-path { stroke: var(--bg-color); }
+        .score-progress { stroke: var(--primary-color); transition: stroke-dashoffset 1.8s ease; }
+        .score-text {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 2.5rem; font-weight: 700; color: var(--primary-color);
+        }
 
-        /* Responsive Design for PC */
+        /* --- Responsive Styles --- */
         @media (min-width: 768px) {
-            body { padding: 20px; }
+            h1 { font-size: 2.2rem; }
+            h2 { font-size: 1.5rem; }
             .screen { padding: 40px; }
-            h1 { font-size: 2.4rem; } h2 { font-size: 1.6rem; } p { font-size: 1.1rem; }
-            .input-group label { font-size: 1rem; }
-            .screenshot-container { flex-direction: row; }
-            #navigation-btns { display: flex; justify-content: space-between; align-items: center; }
-            #navigation-btns .btn { width: auto; }
-            .score-circle { width: 200px; height: 200px; }
-            .score-circle circle { stroke-width: 18; }
-            .score-circle .score-progress { stroke-dasharray: 565; stroke-dashoffset: 565; }
-            .score-text { font-size: 3rem; }
-            .options-list li { font-size: 1rem; padding: 15px; }
-            .feedback-icon { font-size: 1.5rem; }
-            .notification-bar { font-size: 1.1rem; }
+            .score-circle-container { width: 220px; height: 220px; }
+            .score-text { font-size: 3.2rem; }
         }
     </style>
 </head>
 <body>
+
 <div class="notification-bar" id="notification-bar"></div>
 
 <div class="quiz-container">
     <div class="quiz-header">
         <div class="lang-switcher">
-            <button id="lang-en" class="active">English</button>
-            <button id="lang-bn">বাংলা</button>
+            <button id="lang-en" class="active neumorphic-outset">English</button>
+            <button id="lang-bn" class="neumorphic-outset">বাংলা</button>
         </div>
     </div>
 
@@ -155,78 +266,171 @@
         <h1 id="welcome-title"></h1>
         <div class="input-group">
             <label for="userName" id="name-label"></label>
-            <input type="text" id="userName" required>
+            <div class="neumorphic-inset">
+                <input type="text" id="userName" required>
+            </div>
         </div>
         <div class="input-group">
             <label for="mentorName" id="mentor-label"></label>
-            <input type="text" id="mentorName" required>
+            <div class="neumorphic-inset">
+                <input type="text" id="mentorName" required>
+            </div>
         </div>
         <div class="screenshot-container">
             <div class="screenshot-upload">
                 <p class="upload-title" id="upload-title-1"></p>
-                <label class="upload-label" for="ss-upload-1" id="upload-label-1"></label>
+                <label class="upload-label neumorphic-outset" for="ss-upload-1" id="upload-label-1"></label>
                 <input type="file" id="ss-upload-1" accept="image/*">
-                <img id="ss-preview-1" class="screenshot-preview hidden">
+                <div class="neumorphic-inset">
+                    <img id="ss-preview-1" class="screenshot-preview">
+                </div>
             </div>
             <div class="screenshot-upload">
                 <p class="upload-title" id="upload-title-2"></p>
-                <label class="upload-label" for="ss-upload-2" id="upload-label-2"></label>
+                <label class="upload-label neumorphic-outset" for="ss-upload-2" id="upload-label-2"></label>
                 <input type="file" id="ss-upload-2" accept="image/*">
-                <img id="ss-preview-2" class="screenshot-preview hidden">
+                <div class="neumorphic-inset">
+                    <img id="ss-preview-2" class="screenshot-preview">
+                </div>
             </div>
         </div>
-        <button class="btn btn-full" id="start-btn"></button>
+        <button class="btn btn-primary btn-full neumorphic-outset" id="start-btn"></button>
     </div>
 
     <div class="screen hidden" id="quiz-screen">
         <div id="progress-text"></div>
-        <div class="progress-bar"><div id="progress-indicator"></div></div>
+        <div class="progress-bar neumorphic-inset"><div id="progress-indicator"></div></div>
         <div id="q-animation-wrapper">
             <h2 id="question-text"></h2>
-            <ul class="options-list" id="options-list"></ul>
+            <div id="options-container"></div>
         </div>
-        <div id="navigation-btns">
-            <button class="btn btn-secondary" id="prev-btn"></button>
-            <button class="btn" id="next-btn"></button>
+        <div class="navigation-container" id="navigation-btns">
+            <button class="btn neumorphic-outset" id="prev-btn"></button>
+            <button class="btn btn-primary neumorphic-outset" id="next-btn"></button>
         </div>
     </div>
 
     <div class="screen hidden" id="results-screen">
         <h1 id="result-heading"></h1>
-        <div class="score-circle">
-            <svg><circle class="score-bg" cx="100" cy="100" r="90"></circle><circle class="score-progress" id="score-progress" cx="100" cy="100" r="90"></circle></svg>
+        <div class="score-circle-container neumorphic-inset">
+            <div class="score-circle">
+                <svg viewBox="0 0 200 200">
+                    <circle class="score-path score-bg-path" cx="100" cy="100" r="90"></circle>
+                    <circle class="score-path score-progress" id="score-progress" cx="100" cy="100" r="90"></circle>
+                </svg>
+            </div>
             <div class="score-text" id="score-percentage">0%</div>
         </div>
         <p id="score-details"></p>
-        <button class="btn" id="review-btn"></button>
-        <button class="btn btn-secondary" id="restart-btn"></button>
+        <div class="results-buttons">
+            <button class="btn btn-primary neumorphic-outset" id="review-btn"></button>
+            <button class="btn neumorphic-outset" id="restart-btn"></button>
+        </div>
     </div>
 
     <div class="screen hidden" id="review-screen">
         <h1 id="review-title"></h1>
         <div id="review-list"></div>
-        <button class="btn" id="back-to-results-btn"></button>
+        <button class="btn btn-primary neumorphic-outset" id="back-to-results-btn"></button>
     </div>
 </div>
 
 <script>
+    // --- UPDATED SCRIPT URL (from the second file) ---
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwStDLpdEnt4wupWgp3SslalotxqhW5oeS0n_ww_VS72ahKS6vLWBhZF-JNe94_UC95Sw/exec";
 
+    // --- UPDATED UI STRINGS AND GRADING (merged) ---
     const uiStrings = {
-        en: { welcomeTitle: "Industry Introduction", nameLabel: "Your Name", mentorLabel: "Mentor's Name", namePlaceholder: "Enter your full name...", mentorPlaceholder: "Enter mentor's name (e.g., John Doe Sir)", uploadTitle1: "Start of Class", uploadTitle2: "End of Class", uploadLabel: "Click to Upload Screenshot", uploadSuccess: "Uploaded!", startBtn: "Start Quiz", progressText: (c, t) => `Question ${c} of ${t}`, prevBtn: "Previous", nextBtn: "Next", resultsBtn: "Finish & See Results", resultHeading: (name) => `Well done, ${name}!`, scoreDetails: (s, t) => `You scored ${s} out of ${t}.`, restartBtn: "Take Quiz Again", reviewBtn: "Review Answers", reviewTitle: "Answer Review", backToResultsBtn: "Back to Results", notifyName: "Please enter your name.", notifyMentor: "Please enter mentor's name correctly (with Sir/Mam).", notifySS1: "Please upload the start of class screenshot.", notifySS2: "Please upload the end of class screenshot.", notifyDuplicateSS: "Please upload two different screenshots.", submissionInProgress: "Submitting...", submissionSuccess: "Submission Successful!", submissionError: "Submission Failed! Please try again." },
-        bn: { welcomeTitle: "ইন্ডাস্ট্রি পরিচিতি", nameLabel: "আপনার নাম", mentorLabel: "মেন্টরের নাম", namePlaceholder: "আপনার সম্পূর্ণ নাম লিখুন...", mentorPlaceholder: "মেন্টরের নাম লিখুন (যেমন, জন ডো স্যার)", uploadTitle1: "ক্লাসের শুরু", uploadTitle2: "ক্লাসের শেষ", uploadLabel: "স্ক্রিনশট আপলোড করুন", uploadSuccess: "আপলোড হয়েছে!", startBtn: "কুইজ শুরু করুন", progressText: (c, t) => `প্রশ্ন ${t}-এর মধ্যে ${c}`, prevBtn: "পূর্ববর্তী", nextBtn: "পরবর্তী", resultsBtn: "শেষ করুন ও ফলাফল দেখুন", resultHeading: (name) => `খুব ভালো, ${name}!`, scoreDetails: (s, t) => `আপনি ${t}টির মধ্যে ${s}টি সঠিক করেছেন।`, restartBtn: "আবার কুইজ দিন", reviewBtn: "উত্তর পর্যালোচনা করুন", reviewTitle: "উত্তর পর্যালোচনা", backToResultsBtn: "ফলাফলে ফিরে যান", notifyName: "অনুগ্রহ করে আপনার নাম লিখুন।", notifyMentor: "মেন্টরের নাম সঠিকভাবে লিখুন (স্যার/ম্যাম সহ)।", notifySS1: "ক্লাসের শুরুর স্ক্রিনশট আপলোড করুন।", notifySS2: "ক্লাসের শেষের স্ক্রিনশট আপলোড করুন।", notifyDuplicateSS: "অনুগ্রহ করে দুটি ভিন্ন স্ক্রিনশট আপলোড করুন।", submissionInProgress: "জমা দেওয়া হচ্ছে...", submissionSuccess: "সফলভাবে জমা দেওয়া হয়েছে!", submissionError: "জমা দিতে ব্যর্থ! আবার চেষ্টা করুন।" }
+        en: {
+            welcomeTitle: "Industry Introduction", // From the second file
+            nameLabel: "Your Name",
+            mentorLabel: "Mentor's Name",
+            namePlaceholder: "Enter your full name...",
+            mentorPlaceholder: "Enter mentor's name (e.g., John Doe Sir)",
+            uploadTitle1: "Start of Class",
+            uploadTitle2: "End of Class",
+            uploadLabel: "Click to Upload Screenshot",
+            uploadSuccess: "Uploaded! Replace?",
+            startBtn: "Start Quiz",
+            progressText: (c, t) => `Question ${c} of ${t}`,
+            prevBtn: "Previous",
+            nextBtn: "Next",
+            resultsBtn: "Finish & See Results",
+            getResultHeading: (percentage, name) => { // Advanced grading from the first file
+                if (percentage >= 95) return `Excellent, ${name}! (A+)`;
+                if (percentage >= 90) return `Great Job, ${name}! (A)`;
+                if (percentage >= 85) return `Very Good, ${name}! (A-)`;
+                if (percentage >= 75) return `Good Effort, ${name}! (B)`;
+                if (percentage >= 65) return `Satisfactory, ${name}. (C)`;
+                if (percentage >= 55) return `You've Passed, ${name}. (D)`;
+                return `Needs Improvement, ${name}. (F)`;
+            },
+            scoreDetails: (s, t) => `You scored ${s} out of ${t}.`,
+            restartBtn: "Take Quiz Again",
+            reviewBtn: "Review Answers",
+            reviewTitle: "Answer Review",
+            backToResultsBtn: "Back to Results",
+            notifyName: "Please enter your name.",
+            notifyMentor: "Please enter mentor's name correctly (with Sir/Mam).",
+            notifySS1: "Please upload the start of class screenshot.",
+            notifySS2: "Please upload the end of class screenshot.",
+            notifyDuplicateSS: "Please upload two different screenshots.",
+            submissionInProgress: "Submitting...",
+            submissionSuccess: "Submission Successful!",
+            submissionError: "Submission Failed! Please try again."
+        },
+        bn: {
+            welcomeTitle: "ইন্ডাস্ট্রি পরিচিতি", // From the second file
+            nameLabel: "আপনার নাম",
+            mentorLabel: "মেন্টরের নাম",
+            namePlaceholder: "আপনার সম্পূর্ণ নাম লিখুন...",
+            mentorPlaceholder: "মেন্টরের নাম লিখুন (যেমন, জন ডো স্যার)",
+            uploadTitle1: "ক্লাসের শুরু",
+            uploadTitle2: "ক্লাসের শেষ",
+            uploadLabel: "স্ক্রিনশট আপলোড করুন",
+            uploadSuccess: "আপলোড হয়েছে! বদলাবেন?",
+            startBtn: "কুইজ শুরু করুন",
+            progressText: (c, t) => `প্রশ্ন ${t}-এর মধ্যে ${c}`,
+            prevBtn: "পূর্ববর্তী",
+            nextBtn: "পরবর্তী",
+            resultsBtn: "শেষ করুন ও ফলাফল দেখুন",
+            getResultHeading: (percentage, name) => { // Advanced grading from the first file
+                if (percentage >= 95) return `অসাধারণ ফলাফল, ${name}! (A+)`;
+                if (percentage >= 90) return `চমৎকার করেছেন, ${name}! (A)`;
+                if (percentage >= 85) return `খুব ভালো করেছেন, ${name}! (A-)`;
+                if (percentage >= 75) return `ভালো চেষ্টা, ${name}! (B)`;
+                if (percentage >= 65) return `সন্তোষজনক, ${name}। (C)`;
+                if (percentage >= 55) return `আপনি পাস করেছেন, ${name}। (D)`;
+                return `আরও চেষ্টার প্রয়োজন, ${name}। (F)`;
+            },
+            scoreDetails: (s, t) => `আপনি ${t}টির মধ্যে ${s}টি সঠিক করেছেন।`,
+            restartBtn: "আবার কুইজ দিন",
+            reviewBtn: "উত্তর পর্যালোচনা করুন",
+            reviewTitle: "উত্তর পর্যালোচনা",
+            backToResultsBtn: "ফলাফলে ফিরে যান",
+            notifyName: "অনুগ্রহ করে আপনার নাম লিখুন।",
+            notifyMentor: "মেন্টরের নাম সঠিকভাবে লিখুন (স্যার/ম্যাম সহ)।",
+            notifySS1: "ক্লাসের শুরুর স্ক্রিনশট আপলোড করুন।",
+            notifySS2: "ক্লাসের শেষের স্ক্রিনশট আপলোড করুন।",
+            notifyDuplicateSS: "অনুগ্রহ করে দুটি ভিন্ন স্ক্রিনশট আপলোড করুন।",
+            submissionInProgress: "জমা দেওয়া হচ্ছে...",
+            submissionSuccess: "সফলভাবে জমা দেওয়া হয়েছে!",
+            submissionError: "জমা দিতে ব্যর্থ! আবার চেষ্টা করুন."
+        }
     };
+
+    // --- UPDATED QUIZ DATA (from the second file) ---
     const quizData = [
-        { question: { en: "'World largest aloevera & bee company' - related to:", bn: "'বিশ্বের বৃহত্তম অ্যালোভেরা এবং মৌমাছি কোম্পানি' - সম্পর্কিত:" }, options: { en: ['Himalaya', 'Patanjali', 'Dabur', 'Forever Living'], bn: ['হিমালয়', 'পতঞ্জলি', 'ডাবর', 'ফরএভার লিভিং'] }, answerKey: 'Forever Living' },
-        { question: { en: "What do you think about 'Multi-Billion Business Turnover' of FLP generates annually?", bn: "FLP-এর বার্ষিক 'মাল্টি-বিলিয়ন বিজনেস টার্নওভার' সম্পর্কে আপনি কী মনে করেন?" }, options: { en: ['Consistent business growth', 'Sometimes rising & decreasing', 'Downfall of market', 'No clear data available'], bn: ['ধারাবাহিক ব্যবসায়িক বৃদ্ধি', 'কখনও বাড়ছে ও কমছে', 'বাজারের পতন', 'কোনো স্পষ্ট তথ্য উপলব্ধ নেই'] }, answerKey: 'Consistent business growth' },
-        { question: { en: "'Vertically Integrated' means:", bn: "'ভার্টিক্যালি ইন্টিগ্রেটেড' মানে:" }, options: { en: ['Only raw materials supply', "Own 'plant to product' process", 'Manufacturing only', 'Buying from third-party suppliers'], bn: ['শুধুমাত্র কাঁচামাল সরবরাহ', "নিজস্ব 'প্ল্যান্ট থেকে পণ্য' প্রক্রিয়া", 'শুধুমাত্র উৎপাদন', 'তৃতীয় পক্ষের সরবরাহকারীদের কাছ থেকে কেনা'] }, answerKey: "Own 'plant to product' process" },
-        { question: { en: "'The power of Forever, is the power of love' - quoted by:", bn: "'ফরএভারের শক্তি, ভালোবাসার শক্তি' - উক্তিটি কার?" }, options: { en: ['Rex Maughan, CEO', 'Gregg Maughan, President', 'Navaz Ghaswala, Founding Member', "Aidan O'Hare, VP"], bn: ['রেক্স মওghan, সিইও', 'গ্রেগ মওghan, প্রেসিডেন্ট', 'নাওয়াজ ঘাসওয়ালা, প্রতিষ্ঠাতা সদস্য', "এইডান ও'হেয়ার, ভিপি"] }, answerKey: 'Rex Maughan, CEO' },
-        { question: { en: 'What brings Forever Living in market?', bn: 'ফরএভার লিভিং বাজারে কী নিয়ে আসে?' }, options: { en: ['The number 1', 'The only 1', 'Both of them', 'None of the above'], bn: ['এক নম্বর', 'একমাত্র', 'উভয়ই', 'উপরের কোনোটিই নয়'] }, answerKey: 'Both of them' },
-        { question: { en: "What's the most net worth industry below?", bn: "নিচের কোনটি সবচেয়ে বেশি নেটওয়ার্থের শিল্প?" }, options: { en: ['Textile Industry', 'Travel & Tourism Industry', 'Agriculture Industry', 'Wellness Industry'], bn: ['বস্ত্র শিল্প', 'ভ্রমণ ও পর্যটন শিল্প', 'কৃষি শিল্প', 'ওয়েলনেস শিল্প'] }, answerKey: 'Wellness Industry' },
-        { question: { en: 'Forever Living deals with:', bn: 'ফরএভার লিভিং কী নিয়ে কাজ করে?' }, options: { en: ['Direct Business Model, Time Leverage, Passive Income', 'Traditional Business, Passive Income', 'Employee, Active Income', 'Commission-based Retailing'], bn: ['সরাসরি ব্যবসায়িক মডেল, সময়ের লিভারেজ, প্যাসিভ ইনকাম', 'প্রচলিত ব্যবসা, প্যাসিভ ইনকাম', 'কর্মচারী, সক্রিয় আয়', 'কমিশন-ভিত্তিক খুচরা বিক্রয়'] }, answerKey: 'Direct Business Model, Time Leverage, Passive Income' },
-        { question: { en: 'Forever Argi+ is a:', bn: 'ফরএভার আরজি+ হলো একটি:' }, options: { en: ['Protein-based energy drink', 'Used only by bodybuilders', 'Both FIFA energy drink & Nobel prize winning ingredient', 'Regular vitamin drink'], bn: ['প্রোটিন-ভিত্তিক এনার্জি ড্রিঙ্ক', 'শুধুমাত্র বডি বিল্ডারদের দ্বারা ব্যবহৃত', 'ফিফা এনার্জি ড্রিঙ্ক এবং নোবেল পুরস্কার বিজয়ী উপাদান উভয়ই', 'নিয়মিত ভিটামিন ড্রিঙ্ক'] }, answerKey: 'Both FIFA energy drink & Nobel prize winning ingredient' },
-        { question: { en: 'Forever Living is:', bn: 'ফরএভার লিভিং হলো:' }, options: { en: ['An international business', 'Cash rich & Debit Free', 'Old & Stable company', 'All of the above'], bn: ['একটি আন্তর্জাতিক ব্যবসা', 'ক্যাশ রিচ এবং ডেবিট ফ্রি', 'পুরানো এবং স্থিতিশীল কোম্পানি', 'উপরের সবগুলো'] }, answerKey: 'All of the above' },
-        { question: { en: "We're paid on the basis of:", bn: "আমাদের অর্থ প্রদান করা হয় কিসের ভিত্তিতে:" }, options: { en: ['Only selling products typically', 'Business Turnover', 'Monthly fixed salary', 'Annual bonuses only'], bn: ['সাধারণত শুধুমাত্র পণ্য বিক্রির উপর', 'ব্যবসায়িক টার্নওভার', 'মাসিক নির্দিষ্ট বেতন', 'শুধুমাত্র বার্ষিক বোনাস'] }, answerKey: 'Business Turnover' }
+        { type: 'mcq', question: { en: "'World largest aloevera & bee company' - related to:", bn: "'বিশ্বের বৃহত্তম অ্যালোভেরা এবং মৌমাছি কোম্পানি' - সম্পর্কিত:" }, options: { en: ['Himalaya', 'Patanjali', 'Dabur', 'Forever Living'], bn: ['হিমালয়', 'পতঞ্জলি', 'ডাবর', 'ফরএভার লিভিং'] }, answerKey: 'Forever Living' },
+        { type: 'mcq', question: { en: "What do you think about 'Multi-Billion Business Turnover' of FLP generates annually?", bn: "FLP-এর বার্ষিক 'মাল্টি-বিলিয়ন বিজনেস টার্নওভার' সম্পর্কে আপনি কী মনে করেন?" }, options: { en: ['Consistent business growth', 'Sometimes rising & decreasing', 'Downfall of market', 'No clear data available'], bn: ['ধারাবাহিক ব্যবসায়িক বৃদ্ধি', 'কখনও বাড়ছে ও কমছে', 'বাজারের পতন', 'কোনো স্পষ্ট তথ্য উপলব্ধ নেই'] }, answerKey: 'Consistent business growth' },
+        { type: 'mcq', question: { en: "'Vertically Integrated' means:", bn: "'ভার্টিক্যালি ইন্টিগ্রেটেড' মানে:" }, options: { en: ['Only raw materials supply', "Own 'plant to product' process", 'Manufacturing only', 'Buying from third-party suppliers'], bn: ['শুধুমাত্র কাঁচামাল সরবরাহ', "নিজস্ব 'প্ল্যান্ট থেকে পণ্য' প্রক্রিয়া", 'শুধুমাত্র উৎপাদন', 'তৃতীয় পক্ষের সরবরাহকারীদের কাছ থেকে কেনা'] }, answerKey: "Own 'plant to product' process" },
+        { type: 'mcq', question: { en: "'The power of Forever, is the power of love' - quoted by:", bn: "'ফরএভারের শক্তি, ভালোবাসার শক্তি' - উক্তিটি কার?" }, options: { en: ['Rex Maughan, CEO', 'Gregg Maughan, President', 'Navaz Ghaswala, Founding Member', "Aidan O'Hare, VP"], bn: ['রেক্স মওghan, সিইও', 'গ্রেগ মওghan, প্রেসিডেন্ট', 'নাওয়াজ ঘাসওয়ালা, প্রতিষ্ঠাতা সদস্য', "এইডান ও'হেয়ার, ভিপি"] }, answerKey: 'Rex Maughan, CEO' },
+        { type: 'mcq', question: { en: 'What brings Forever Living in market?', bn: 'ফরএভার লিভিং বাজারে কী নিয়ে আসে?' }, options: { en: ['The number 1', 'The only 1', 'Both of them', 'None of the above'], bn: ['এক নম্বর', 'একমাত্র', 'উভয়ই', 'উপরের কোনোটিই নয়'] }, answerKey: 'Both of them' },
+        { type: 'mcq', question: { en: "What's the most net worth industry below?", bn: "নিচের কোনটি সবচেয়ে বেশি নেটওয়ার্থের শিল্প?" }, options: { en: ['Textile Industry', 'Travel & Tourism Industry', 'Agriculture Industry', 'Wellness Industry'], bn: ['বস্ত্র শিল্প', 'ভ্রমণ ও পর্যটন শিল্প', 'কৃষি শিল্প', 'ওয়েলনেস শিল্প'] }, answerKey: 'Wellness Industry' },
+        { type: 'mcq', question: { en: 'Forever Living deals with:', bn: 'ফরএভার লিভিং কী নিয়ে কাজ করে?' }, options: { en: ['Direct Business Model, Time Leverage, Passive Income', 'Traditional Business, Passive Income', 'Employee, Active Income', 'Commission-based Retailing'], bn: ['সরাসরি ব্যবসায়িক মডেল, সময়ের লিভারেজ, প্যাসিভ ইনকাম', 'প্রচলিত ব্যবসা, প্যাসিভ ইনকাম', 'কর্মচারী, সক্রিয় আয়', 'কমিশন-ভিত্তিক খুচরা বিক্রয়'] }, answerKey: 'Direct Business Model, Time Leverage, Passive Income' },
+        { type: 'mcq', question: { en: 'Forever Argi+ is a:', bn: 'ফরএভার আরজি+ হলো একটি:' }, options: { en: ['Protein-based energy drink', 'Used only by bodybuilders', 'Both FIFA energy drink & Nobel prize winning ingredient', 'Regular vitamin drink'], bn: ['প্রোটিন-ভিত্তিক এনার্জি ড্রিঙ্ক', 'শুধুমাত্র বডি বিল্ডারদের দ্বারা ব্যবহৃত', 'ফিফা এনার্জি ড্রিঙ্ক এবং নোবেল পুরস্কার বিজয়ী উপাদান উভয়ই', 'নিয়মিত ভিটামিন ড্রিঙ্ক'] }, answerKey: 'Both FIFA energy drink & Nobel prize winning ingredient' },
+        { type: 'mcq', question: { en: 'Forever Living is:', bn: 'ফরএভার লিভিং হলো:' }, options: { en: ['An international business', 'Cash rich & Debit Free', 'Old & Stable company', 'All of the above'], bn: ['একটি আন্তর্জাতিক ব্যবসা', 'ক্যাশ রিচ এবং ডেবিট ফ্রি', 'পুরানো এবং স্থিতিশীল কোম্পানি', 'উপরের সবগুলো'] }, answerKey: 'All of the above' },
+        { type: 'mcq', question: { en: "We're paid on the basis of:", bn: "আমাদের অর্থ প্রদান করা হয় কিসের ভিত্তিতে:" }, options: { en: ['Only selling products typically', 'Business Turnover', 'Monthly fixed salary', 'Annual bonuses only'], bn: ['সাধারণত শুধুমাত্র পণ্য বিক্রির উপর', 'ব্যবসায়িক টার্নওভার', 'মাসিক নির্দিষ্ট বেতন', 'শুধুমাত্র বার্ষিক বোনাস'] }, answerKey: 'Business Turnover' }
     ];
 
     let currentLanguage = 'en';
@@ -267,13 +471,14 @@
 
     function updateAllUIText() {
         const t = uiStrings[currentLanguage];
+        document.title = `${t.welcomeTitle} - Final Assessment`;
         document.getElementById('welcome-title').innerText = t.welcomeTitle;
         document.getElementById('name-label').innerText = t.nameLabel;
         document.getElementById('mentor-label').innerText = t.mentorLabel;
         userNameInput.placeholder = t.namePlaceholder;
         mentorNameInput.placeholder = t.mentorPlaceholder;
-        if (!screenshotFile1) document.getElementById('upload-label-1').innerText = t.uploadLabel;
-        if (!screenshotFile2) document.getElementById('upload-label-2').innerText = t.uploadLabel;
+        document.getElementById('upload-label-1').innerText = screenshotFile1 ? t.uploadSuccess : t.uploadLabel;
+        document.getElementById('upload-label-2').innerText = screenshotFile2 ? t.uploadSuccess : t.uploadLabel;
         document.getElementById('upload-title-1').innerText = t.uploadTitle1;
         document.getElementById('upload-title-2').innerText = t.uploadTitle2;
         startBtn.innerText = t.startBtn;
@@ -283,32 +488,198 @@
         document.getElementById('review-title').innerText = t.reviewTitle;
         backToResultsBtn.innerText = t.backToResultsBtn;
 
-        if (!screens.quiz.classList.contains('hidden')) {
-            document.getElementById('question-text').innerText = quizData[currentQuestionIndex].question[currentLanguage];
-            document.querySelectorAll('#options-list li').forEach((li, index) => {
-                const span = li.querySelector('span:first-child');
-                if (span) span.innerText = quizData[currentQuestionIndex].options[currentLanguage][index];
-            });
-            updateNavigation();
-        }
+        if (!screens.quiz.classList.contains('hidden')) showQuestion();
         if (!screens.review.classList.contains('hidden')) buildReviewScreen();
         if (!screens.results.classList.contains('hidden')) {
-            let score = 0; userAnswers.forEach((ans, i) => { if (ans === quizData[i].answerKey) score++; });
-            document.getElementById('result-heading').innerText = t.resultHeading(userName);
-            document.getElementById('score-details').innerText = t.scoreDetails(score, quizData.length);
+            let score = 0;
+            const totalMcq = quizData.filter(q => q.type === 'mcq').length;
+            userAnswers.forEach((answer, index) => {
+                if (quizData[index].type === 'mcq' && answer === quizData[index].answerKey) score++;
+            });
+            const percentage = totalMcq > 0 ? Math.round((score / totalMcq) * 100) : 0;
+
+            document.getElementById('result-heading').innerText = t.getResultHeading(percentage, userName);
+            document.getElementById('score-details').innerText = t.scoreDetails(score, totalMcq);
         }
+    }
+
+    function showQuestion() {
+        const qWrapper = document.getElementById('q-animation-wrapper');
+        qWrapper.style.animation = 'none'; void qWrapper.offsetWidth;
+        qWrapper.style.animation = 'fadeIn 0.5s ease-in-out forwards';
+
+        const optionsContainer = document.getElementById('options-container');
+        optionsContainer.innerHTML = '';
+
+        const currentQuestion = quizData[currentQuestionIndex];
+        const t = uiStrings[currentLanguage];
+
+        document.getElementById('progress-indicator').style.width = `${((currentQuestionIndex + 1) / quizData.length) * 100}%`;
+        document.getElementById('progress-text').innerText = t.progressText(currentQuestionIndex + 1, quizData.length);
+        document.getElementById('question-text').innerText = currentQuestion.question[currentLanguage];
+
+        if (currentQuestion.type === 'mcq') {
+            const optionsList = document.createElement('ul');
+            optionsList.className = 'options-list';
+            currentQuestion.options[currentLanguage].forEach((option, index) => {
+                const li = document.createElement('li');
+                li.className = 'neumorphic-outset';
+                const textSpan = document.createElement('span');
+                textSpan.innerText = option;
+                li.appendChild(textSpan);
+                li.dataset.answerKey = currentQuestion.options.en[index];
+                li.addEventListener('click', selectOption);
+                optionsList.appendChild(li);
+            });
+            optionsContainer.appendChild(optionsList);
+            if (userAnswers[currentQuestionIndex]) {
+                showInstantFeedback();
+            }
+        }
+        updateNavigation();
+    }
+
+    function selectOption(e) {
+        const selectedLi = e.target.closest('li');
+        const optionsList = selectedLi.parentElement;
+
+        if (optionsList.classList.contains('disabled')) return;
+
+        userAnswers[currentQuestionIndex] = selectedLi.dataset.answerKey;
+
+        showInstantFeedback();
+        updateNavigation();
+
+        setTimeout(() => {
+            if (currentQuestionIndex < quizData.length - 1) {
+                handleNextButton();
+            } else {
+                showResults();
+            }
+        }, 800);
+    }
+
+    function showInstantFeedback() {
+        const optionsList = document.querySelector('.options-list');
+        if (!optionsList) return;
+        optionsList.classList.add('disabled');
+        const correctAnswerKey = quizData[currentQuestionIndex].answerKey;
+
+        Array.from(optionsList.children).forEach(li => {
+            li.classList.remove('neumorphic-outset');
+            li.classList.add('selected');
+            if(li.querySelector('.feedback-icon')) li.querySelector('.feedback-icon').remove();
+
+            const icon = document.createElement('span');
+            icon.className = 'feedback-icon';
+
+            if (li.dataset.answerKey === correctAnswerKey) {
+                li.classList.add('correct');
+                icon.innerHTML = '✔';
+                li.appendChild(icon);
+            } else if (li.dataset.answerKey === userAnswers[currentQuestionIndex]) {
+                li.classList.add('incorrect');
+                icon.innerHTML = '✖';
+                li.appendChild(icon);
+            }
+        });
+    }
+
+    function handlePrevButton() { if(currentQuestionIndex > 0) { currentQuestionIndex--; showQuestion(); } }
+    function handleNextButton() {
+        if (currentQuestionIndex < quizData.length - 1) {
+             currentQuestionIndex++; showQuestion();
+        } else {
+             showResults();
+        }
+    }
+
+    function updateNavigation() {
+        prevBtn.disabled = currentQuestionIndex === 0;
+
+        const currentAnswer = userAnswers[currentQuestionIndex];
+        const currentQuestion = quizData[currentQuestionIndex];
+
+        if (currentQuestion.type === 'mcq') {
+            nextBtn.disabled = !currentAnswer;
+        }
+
+        nextBtn.innerText = uiStrings[currentLanguage][currentQuestionIndex === quizData.length - 1 ? 'resultsBtn' : 'nextBtn'];
+    }
+
+    function showResults() {
+        switchScreen('results');
+        let score = 0;
+        const totalMcq = quizData.filter(q => q.type === 'mcq').length;
+        userAnswers.forEach((answer, index) => {
+            if (quizData[index].type === 'mcq' && answer === quizData[index].answerKey) {
+                score++;
+            }
+        });
+        const percentage = totalMcq > 0 ? Math.round((score / totalMcq) * 100) : 0;
+
+        submitDataToSheet(score, percentage);
+
+        const t = uiStrings[currentLanguage];
+        document.getElementById('result-heading').innerText = t.getResultHeading(percentage, userName);
+        document.getElementById('score-percentage').innerText = `${percentage}%`;
+        document.getElementById('score-details').innerText = t.scoreDetails(score, totalMcq);
+
+        const circle = document.getElementById('score-progress');
+        const radius = circle.r.baseVal.value;
+        const circumference = 2 * Math.PI * radius;
+
+        circle.style.strokeDasharray = `${circumference} ${circumference}`;
+        circle.style.strokeDashoffset = circumference; // Reset before animating
+
+        const offset = circumference - (percentage / 100) * circumference;
+        setTimeout(() => { circle.style.strokeDashoffset = offset; }, 100);
+
+        buildReviewScreen();
+    }
+
+    function buildReviewScreen() {
+        const reviewList = document.getElementById('review-list');
+        reviewList.innerHTML = '';
+        quizData.forEach((q, index) => {
+            const item = document.createElement('div');
+            item.className = 'review-item';
+            const questionText = document.createElement('h2');
+            questionText.innerText = (index + 1) + '. ' + q.question[currentLanguage];
+            item.appendChild(questionText);
+
+            if (q.type === 'mcq') {
+                const optionsUl = document.createElement('ul');
+                optionsUl.className = 'options-list';
+                q.options[currentLanguage].forEach((opt, optIndex) => {
+                    const li = document.createElement('li');
+                    li.className = 'neumorphic-outset';
+                    const englishOptKey = q.options.en[optIndex];
+                    li.innerText = opt;
+                    if (englishOptKey === q.answerKey) li.classList.add('correct-answer');
+                    if (englishOptKey === userAnswers[index]) {
+                        li.classList.add('user-answer');
+                        if (userAnswers[index] !== q.answerKey) li.classList.add('incorrect');
+                    }
+                    optionsUl.appendChild(li);
+                });
+                item.appendChild(optionsUl);
+            }
+            reviewList.appendChild(item);
+        });
     }
 
     function showNotification(message, isSuccess = false) {
         notificationBar.innerText = message;
-        notificationBar.style.backgroundColor = isSuccess ? 'var(--correct-color)' : 'var(--incorrect-color)';
+        notificationBar.classList.toggle('success', isSuccess);
         notificationBar.classList.add('show');
         setTimeout(() => notificationBar.classList.remove('show'), 3000);
     }
 
     function triggerShake(element) {
-        element.classList.add('shake', 'invalid-field');
-        setTimeout(() => element.classList.remove('shake', 'invalid-field'), 500);
+        const parentDiv = element.closest('.input-group') ? element.parentElement : element;
+        parentDiv.classList.add('invalid-field');
+        setTimeout(() => parentDiv.classList.remove('invalid-field'), 500);
     }
 
     function validateWelcomeScreen() {
@@ -343,7 +714,7 @@
         if (file && file.type.startsWith('image/')) {
             if(num === 1) screenshotFile1 = file; else screenshotFile2 = file;
             previewEl.src = URL.createObjectURL(file);
-            previewEl.classList.remove('hidden');
+            previewEl.classList.add('visible');
             labelEl.innerText = uiStrings[currentLanguage].uploadSuccess;
             labelEl.classList.remove('invalid-field');
 
@@ -356,135 +727,53 @@
         }
     }
 
-    function switchScreen(screenToShow) { Object.values(screens).forEach(s => s.classList.add('hidden')); screens[screenToShow].classList.remove('hidden'); }
+    function switchScreen(screenToShow) {
+        Object.values(screens).forEach(s => s.classList.add('hidden'));
+        screens[screenToShow].classList.remove('hidden');
+        if(screenToShow === 'review') {
+            document.getElementById('review-list').scrollTop = 0;
+        }
+    }
     function startQuiz() { if (!validateWelcomeScreen()) return; userName = userNameInput.value.trim(); mentorName = mentorNameInput.value.trim(); switchScreen('quiz'); showQuestion(); }
 
-    function showQuestion() {
-        const qWrapper = document.getElementById('q-animation-wrapper');
-        qWrapper.style.animation = 'none'; void qWrapper.offsetWidth;
-        qWrapper.style.animation = 'fadeIn 0.5s ease-in-out';
-        document.getElementById('options-list').innerHTML = '';
-        const currentQuestion = quizData[currentQuestionIndex], t = uiStrings[currentLanguage];
-        document.getElementById('progress-indicator').style.width = `${((currentQuestionIndex + 1) / quizData.length) * 100}%`;
-        document.getElementById('progress-text').innerText = t.progressText(currentQuestionIndex + 1, quizData.length);
-        document.getElementById('question-text').innerText = currentQuestion.question[currentLanguage];
-        const optionsList = document.getElementById('options-list');
-        currentQuestion.options[currentLanguage].forEach((option, index) => {
-            const li = document.createElement('li'), textSpan = document.createElement('span');
-            textSpan.innerText = option; li.appendChild(textSpan);
-            li.dataset.answerKey = currentQuestion.options.en[index]; li.addEventListener('click', selectOption); optionsList.appendChild(li);
-        });
-        if(userAnswers[currentQuestionIndex]) { showInstantFeedback(); } else { optionsList.classList.remove('disabled'); }
-        updateNavigation();
-    }
-
-    function selectOption(e) {
-        if(document.getElementById('options-list').classList.contains('disabled')) return;
-        userAnswers[currentQuestionIndex] = e.target.closest('li').dataset.answerKey;
-        showInstantFeedback();
-        updateNavigation();
-    }
-
-    function showInstantFeedback() {
-        const optionsList = document.getElementById('options-list');
-        optionsList.classList.add('disabled');
-        const correctAnswerKey = quizData[currentQuestionIndex].answerKey;
-        Array.from(optionsList.children).forEach(li => {
-            if(li.querySelector('.feedback-icon')) li.querySelector('.feedback-icon').remove();
-            const icon = document.createElement('span'); icon.className = 'feedback-icon';
-            if (li.dataset.answerKey === correctAnswerKey) {
-                li.classList.add('correct'); icon.innerHTML = '✔'; li.appendChild(icon);
-            } else if (li.dataset.answerKey === userAnswers[currentQuestionIndex]) {
-                li.classList.add('incorrect'); icon.innerHTML = '✖'; li.appendChild(icon);
-            }
-        });
-    }
-
-    function handlePrevButton() { if(currentQuestionIndex > 0) { currentQuestionIndex--; showQuestion(); } }
-    function handleNextButton() { if (currentQuestionIndex < quizData.length - 1) { currentQuestionIndex++; showQuestion(); } else { showResults(); } }
-    function updateNavigation() {
-        prevBtn.disabled = currentQuestionIndex === 0;
-        nextBtn.disabled = userAnswers[currentQuestionIndex] === null;
-        nextBtn.innerText = uiStrings[currentLanguage][currentQuestionIndex === quizData.length - 1 ? 'resultsBtn' : 'nextBtn'];
-    }
-
-    function showResults() {
-        let score = 0;
-        userAnswers.forEach((answer, index) => { if (answer === quizData[index].answerKey) score++; });
-        const percentage = Math.round((score / quizData.length) * 100);
-
-        submitDataToSheet(score, percentage);
-
-        switchScreen('results');
-        const t = uiStrings[currentLanguage];
-        document.getElementById('result-heading').innerText = t.resultHeading(userName);
-        document.getElementById('score-percentage').innerText = `${percentage}%`;
-        document.getElementById('score-details').innerText = t.scoreDetails(score, quizData.length);
-        const circle = document.getElementById('score-progress'), radius = circle.r.baseVal.value, circumference = 2 * Math.PI * radius;
-        const offset = circumference - (percentage / 100) * circumference;
-        setTimeout(() => circle.style.strokeDashoffset = offset, 100);
-        buildReviewScreen();
-    }
-
     function submitDataToSheet(score, percentage) {
-    const formData = new FormData();
-    formData.append('UserName', userName);
-    formData.append('MentorName', mentorName);
-    formData.append('Score', score);
-    formData.append('Percentage', percentage);
+        const formData = new FormData();
+        formData.append('UserName', userName);
+        formData.append('MentorName', mentorName);
+        formData.append('Score', score);
+        formData.append('Percentage', percentage);
 
-    // প্রতিটি প্রশ্নের উত্তর আলাদাভাবে যোগ করা হচ্ছে
-    userAnswers.forEach((answer, index) => {
-        formData.append(`Q${index + 1}_Answer`, answer || 'Not Answered');
-    });
-
-    formData.append('screenshot1', screenshotBase64_1);
-    formData.append('screenshot2', screenshotBase64_2);
-
-    const submissionBtn = document.getElementById('review-btn');
-    const originalText = submissionBtn.innerText;
-    submissionBtn.disabled = true;
-    reviewBtn.style.backgroundColor = '#bdc3c7'; // Grey out the button
-    submissionBtn.innerText = uiStrings[currentLanguage].submissionInProgress;
-
-    fetch(SCRIPT_URL, { method: 'POST', body: formData})
-        .then(response => response.json())
-        .then(data => {
-            if(data.result === 'success'){
-                showNotification(uiStrings[currentLanguage].submissionSuccess, true);
-            } else {
-                throw new Error(data.error || 'Unknown error');
-            }
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-            showNotification(uiStrings[currentLanguage].submissionError);
-        })
-        .finally(() => {
-            submissionBtn.disabled = false;
-            reviewBtn.style.backgroundColor = 'var(--primary-color)'; // Restore color
-            submissionBtn.innerText = originalText;
+        userAnswers.forEach((answer, index) => {
+            formData.append(`Q${index + 1}_Answer`, answer || 'Not Answered');
         });
-}
 
-    function buildReviewScreen() {
-        const reviewList = document.getElementById('review-list');
-        reviewList.innerHTML = '';
-        quizData.forEach((q, index) => {
-            const item = document.createElement('div'), questionText = document.createElement('h2'), optionsUl = document.createElement('ul');
-            item.className = 'review-item'; questionText.innerText = (index + 1) + '. ' + q.question[currentLanguage]; optionsUl.className = 'options-list';
-            q.options[currentLanguage].forEach((opt, optIndex) => {
-                const li = document.createElement('li'), englishOptKey = q.options.en[optIndex];
-                li.innerText = opt;
-                if (englishOptKey === q.answerKey) li.classList.add('correct-answer');
-                if (englishOptKey === userAnswers[index]) {
-                    li.classList.add('user-answer');
-                    if (userAnswers[index] !== q.answerKey) li.classList.add('incorrect');
+        formData.append('screenshot1', screenshotBase64_1);
+        formData.append('screenshot2', screenshotBase64_2);
+
+        const submissionBtn = document.getElementById('review-btn');
+        const originalText = submissionBtn.innerText;
+        submissionBtn.disabled = true;
+        submissionBtn.style.opacity = '0.7';
+        submissionBtn.innerText = uiStrings[currentLanguage].submissionInProgress;
+
+        fetch(SCRIPT_URL, { method: 'POST', body: formData})
+            .then(response => response.json())
+            .then(data => {
+                if(data.result === 'success'){
+                    showNotification(uiStrings[currentLanguage].submissionSuccess, true);
+                } else {
+                    throw new Error(data.error || 'Unknown error');
                 }
-                optionsUl.appendChild(li);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                showNotification(uiStrings[currentLanguage].submissionError);
+            })
+            .finally(() => {
+                submissionBtn.disabled = false;
+                submissionBtn.style.opacity = '1';
+                submissionBtn.innerText = originalText;
             });
-            item.appendChild(questionText); item.appendChild(optionsUl); reviewList.appendChild(item);
-        });
     }
 
     function restartQuiz() { window.location.reload(); }
